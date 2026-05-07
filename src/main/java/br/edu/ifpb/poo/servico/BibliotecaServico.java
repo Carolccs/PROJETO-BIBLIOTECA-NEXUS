@@ -132,4 +132,128 @@ public class BibliotecaServico {
                 .findFirst()
                 .orElse(null);
     }
+
+    public void popularDados() {
+        cadastrarUsuario(new AlunoGraduacao(10, "João Silva", "joao.silva@email.com"));
+        cadastrarUsuario(new AlunoGraduacao(11, "Mariana Oliveira", "mariana@email.com"));
+
+        cadastrarUsuario(new ProfessorPosGraduacao(20, "Prof. Ricardo Santos", "ricardo@ifpb.edu.br"));
+        cadastrarUsuario(new ProfessorPosGraduacao(21, "Prof. Carlos Guedes", "carlos@ifpb.edu.br"));
+
+        cadastrarUsuario(new FuncionarioAdministrativo(30, "Ana Paula", "ana@ifpb.edu.br"));
+        cadastrarUsuario(new FuncionarioAdministrativo(31, "Diana Lima", "diana@ifpb.edu.br"));
+
+        Livro livro1 = new Livro(
+                101,
+                "Java: Como Programar",
+                2021,
+                "978-85",
+                "Deitel",
+                "Pearson",
+                10,
+                "Tecnologia",
+                900,
+                "Guia Completo"
+        );
+
+        Livro livro2 = new Livro(
+                102,
+                "Código Limpo",
+                2008,
+                "978-01",
+                "Robert Martin",
+                "Prentice Hall",
+                1,
+                "Tecnologia",
+                464,
+                "Boas práticas de programação"
+        );
+
+        Livro livro3 = new Livro(
+                103,
+                "O Senhor dos Anéis",
+                1954,
+                "978-99",
+                "J.R.R. Tolkien",
+                "HarperCollins",
+                1,
+                "Fantasia",
+                1200,
+                "A jornada do Um Anel"
+        );
+
+        cadastrarItem(livro1);
+        cadastrarItem(livro2);
+        cadastrarItem(livro3);
+
+        Revista revista1 = new Revista(
+                201,
+                "National Geographic",
+                2024,
+                "0027-9358",
+                145,
+                4,
+                "Abril",
+                "15/04/2024"
+        );
+
+        Revista revista2 = new Revista(
+                202,
+                "Mundo Estranho",
+                2023,
+                "ISSN-123",
+                150,
+                5,
+                "Editora Abril",
+                "01/05/2023"
+        );
+
+        cadastrarItem(revista1);
+        cadastrarItem(revista2);
+
+        List<String> faixasPinkFloyd = List.of(
+                "Time",
+                "Money",
+                "Us and Them"
+        );
+
+        Cd cd1 = new Cd(
+                301,
+                "Dark Side of the Moon",
+                1973,
+                "Pink Floyd",
+                faixasPinkFloyd
+        );
+
+        cadastrarItem(cd1);
+
+        Dvd dvd1 = new Dvd(
+                401,
+                "Interstellar",
+                2014,
+                "Christopher Nolan",
+                169,
+                "12 anos"
+        );
+
+        Dvd dvd2 = new Dvd(
+                402,
+                "Inception",
+                2010,
+                "Christopher Nolan",
+                148,
+                "14 anos"
+        );
+
+        cadastrarItem(dvd1);
+        cadastrarItem(dvd2);
+
+        realizarEmprestimo(buscarUsuarioPorId(10), livro1);
+        realizarEmprestimo(buscarUsuarioPorId(20), livro2);
+        realizarEmprestimo(buscarUsuarioPorId(20), dvd1);
+        realizarEmprestimo(buscarUsuarioPorId(11), revista1);
+        realizarEmprestimo(buscarUsuarioPorId(30), cd1);
+
+        System.out.println(">>> Sistema povoado com sucesso!");
+    }
 }

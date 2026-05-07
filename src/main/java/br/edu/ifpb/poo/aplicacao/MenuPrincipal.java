@@ -14,8 +14,11 @@ public class MenuPrincipal {
 
     public MenuPrincipal() {
 
-        ui = new InterfaceUsuario();
+         ui = new InterfaceUsuario();
+
         servico = new BibliotecaServico();
+
+        servico.popularDados();
 
         menuItens = new MenuItens(ui, servico);
         menuUsuarios = new MenuUsuarios(ui, servico);
