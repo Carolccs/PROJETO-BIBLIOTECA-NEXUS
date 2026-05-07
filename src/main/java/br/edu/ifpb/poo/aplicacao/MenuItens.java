@@ -199,14 +199,6 @@ public class MenuItens {
             int id = ui.lerInteiro("ID: ");
             String resultado = servico.removerItem(id);
             System.out.println("\n" + resultado);
-        }
-    /*private void excluirItem() {
-
-        int id = ui.lerInteiro("ID item: ");
-
-        String resultado =
-                servico.removerItem(id);
-
-        ui.mensagem(resultado); }*/
-    
+    }
+       
 }

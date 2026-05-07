@@ -32,7 +32,7 @@ public class Emprestimo {
     public double getValorMulta() { return valorMulta; }
     public void setValorMulta(double valorMulta) { this.valorMulta = valorMulta; }
 
-    // Exibição formatada para o Histórico (UC6)
+    
     @Override
     public String toString() {
         return String.format("ID: %d | Item: %s | Usuário: %s | Devolução: %s | Multa: R$ %.2f", 

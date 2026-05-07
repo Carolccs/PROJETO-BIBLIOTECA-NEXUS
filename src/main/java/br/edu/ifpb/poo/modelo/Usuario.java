@@ -26,11 +26,7 @@ public abstract class Usuario {
     public boolean isMultaPendente() { return multaPendente; }
     public void setMultaPendente(boolean multaPendente) { this.multaPendente = multaPendente; }
     
-    // Métodos Abstratos: Cada subclasse implementará seus valores específicos [1, 2]
-    public abstract int getLimiteEmprestimos(); // 3 para Aluno, 5 para Professor, 2 para Funcionario
-    public abstract double getValorMultaDiaria(); // R$ 2.00, R$ 1.00 ou R$ 1.50
-    public abstract int getPrazoEmprestimo(ItemAcervo item); // Regra dinâmica para Professores [1]
-
-    
-
+    public abstract int getLimiteEmprestimos(); 
+    public abstract double getValorMultaDiaria(); 
+    public abstract int getPrazoEmprestimo(ItemAcervo item); 
 }
