@@ -23,6 +23,6 @@ public class FuncionarioAdministrativo extends Usuario {
     public int getPrazoEmprestimo(ItemAcervo item) {
         return PRAZO_DIAS;
     }
-
+//terminal.intregated.FontSize
     
 }
