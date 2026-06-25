@@ -18,7 +18,7 @@ public class MenuPrincipal {
 
         servico = new BibliotecaServico();
 
-        servico.popularDados();
+        servico.popularDadosSistema();
 
         menuItens = new MenuItens(ui, servico);
         menuUsuarios = new MenuUsuarios(ui, servico);
@@ -36,7 +36,7 @@ public class MenuPrincipal {
             System.out.println("[1] Gerenciar Itens");
             System.out.println("[2] Gerenciar Usuários");
             System.out.println("[3] Operações");
-            System.out.println("[4] Consultas");
+            System.out.println("[4] Consultas e Relatórios ");
             System.out.println("[5] Sair");
 
             opcao = ui.lerInteiro("Escolha: ");
@@ -64,7 +64,8 @@ public class MenuPrincipal {
                     break;
 
                 default:
-                    System.out.println("Opção inválida.");
+                    System.out.println("Opção inválida! Escolha um número de 1 a 5.");
+                    break;
             }
         }
     }

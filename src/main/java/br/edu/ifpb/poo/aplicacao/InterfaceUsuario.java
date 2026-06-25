@@ -15,6 +15,11 @@ public class InterfaceUsuario {
         System.out.println("================================");
     }
 
+    public void pausar() {
+        System.out.println("\nPressione ENTER para continuar...");
+        leitor.nextLine();
+    }
+
     public String lerTexto(String mensagem) {
         System.out.print(mensagem);
         return leitor.nextLine();
@@ -25,12 +30,15 @@ public class InterfaceUsuario {
     }
 
     public int lerInteiro(String mensagem) {
-        System.out.print(mensagem);
-        try {
-            return Integer.parseInt(leitor.nextLine());
-        } catch (NumberFormatException e) {
-            System.out.println("Erro: Digite apenas números.");
-            return -1;
+        while (true) {
+            System.out.print(mensagem);
+
+            try {
+                return Integer.parseInt(leitor.nextLine());
+
+            } catch (NumberFormatException e) {
+                System.out.println("Erro: Digite apenas números.");
+            }
         }
     }
 }

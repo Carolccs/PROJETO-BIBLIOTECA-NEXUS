@@ -5,8 +5,8 @@ public class Dvd extends ItemAcervo {
     private int duracao; // em minutos
     private String classificacaoIndicativa;
 
-    public Dvd(int id, String titulo, int anoPublicacao, String diretor, int duracao, String classificacao) {
-        super(id, titulo, anoPublicacao);
+    public Dvd(int id, String diretor, String titulo, int anoPublicacao,  int duracao, String classificacao) {
+        super(id, diretor, titulo, anoPublicacao);
         this.diretor = diretor;
         this.duracao = duracao;
         this.classificacaoIndicativa = classificacao;

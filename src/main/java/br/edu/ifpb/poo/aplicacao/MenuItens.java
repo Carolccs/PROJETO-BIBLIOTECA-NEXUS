@@ -1,204 +1,135 @@
 package br.edu.ifpb.poo.aplicacao;
 
+import br.edu.ifpb.poo.servico.BibliotecaServico;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.edu.ifpb.poo.modelo.Cd;
-import br.edu.ifpb.poo.modelo.Dvd;
-import br.edu.ifpb.poo.modelo.ItemAcervo;
-import br.edu.ifpb.poo.modelo.Livro;
-import br.edu.ifpb.poo.modelo.Revista;
-import br.edu.ifpb.poo.servico.BibliotecaServico;
 
 public class MenuItens {
 
     private InterfaceUsuario ui;
     private BibliotecaServico servico;
 
-    public MenuItens(
-            InterfaceUsuario ui,
-            BibliotecaServico servico) {
-
+    public MenuItens(InterfaceUsuario ui, BibliotecaServico servico) {
         this.ui = ui;
         this.servico = servico;
     }
 
     public void exibir() {
-
         int opcao = -1;
 
-        while (opcao != 6) {
-
-            ui.titulo("ITENS");
-
-            System.out.println("[1] Livro");
-            System.out.println("[2] Revista");
-            System.out.println("[3] CD");
-            System.out.println("[4] DVD");
-            System.out.println("[5] Excluir");
-            System.out.println("[6] Voltar");
+        while (opcao != 8) { 
+            System.out.println("\n--- GERENCIAR ITENS ---");
+            System.out.println("[1] Cadastrar Livro (Físico ou Áudio)");
+            System.out.println("[2] Cadastrar Revista");
+            System.out.println("[3] Cadastrar CD");
+            System.out.println("[4] Cadastrar DVD");
+            System.out.println("[5] Cadastrar Jogo de Tabuleiro");
+            System.out.println("[6] Cadastrar Editora");
+            System.out.println("[7] Excluir Item");
+            System.out.println("[8] Voltar");
 
             opcao = ui.lerInteiro("Escolha: ");
 
             switch (opcao) {
-
-                case 1:
-                    cadastrarLivro();
-                    break;
-
-                case 2:
-                    cadastrarRevista();
-                    break;
-
-                case 3:
-                    cadastrarCd();
-                    break;
-
-                case 4:
-                    cadastrarDvd();
-                    break;
-
-                case 5:
-                    excluirItem();
-                    break;
+                case 1: cadastrarLivro(); break;
+                case 2: cadastrarRevista(); break;
+                case 3: cadastrarCd(); break;
+                case 4: cadastrarDvd(); break;
+                case 5: cadastrarJogo(); break;
+                case 6: cadastrarEditora(); break;
+                case 7: excluirItem(); break;
+                case 8: break; // Apenas volta ao menu principal
+                default: System.out.println("Opção inválida.");
             }
         }
     }
 
+    private void cadastrarEditora() {
+        System.out.println("\n-- Cadastro de Editora --");
+        int id = ui.lerInteiro("ID da Editora: ");
+        String nome = ui.lerTexto("Nome: ");
+        String cnpj = ui.lerTexto("CNPJ: ");
+        servico.cadastrarEditora(id, nome, cnpj);
+    }
+
     private void cadastrarLivro() {
+        System.out.println("\n-- Cadastro de Livro --");
+        System.out.println("[3] Livro Físico | [4] Áudio-Livro");
+        int subtipo = ui.lerInteiro("Escolha o tipo: ");
 
-        int id = ui.lerInteiro("ID: ");
+        int id = ui.lerInteiro("ID do Item: ");
         String titulo = ui.lerTexto("Título: ");
+        String autor = ui.lerTexto("Autor: ");
+        int ano = ui.lerInteiro("Ano de Publicação: ");
         String isbn = ui.lerTexto("ISBN: ");
-        String autores = ui.lerTexto("Autores: ");
-        String editora = ui.lerTexto("Editora: ");
-        int ano = ui.lerInteiro("Ano: ");
-        int edicao = ui.lerInteiro("Edição: ");
-        String genero = ui.lerTexto("Gênero: ");
-        int paginas = ui.lerInteiro("Páginas: ");
-        String sinopse = ui.lerTexto("Sinopse: ");
+        int idEditora = ui.lerInteiro("ID da Editora para vincular: ");
 
-        Livro livro = new Livro(
-                id,
-                titulo,
-                ano,
-                isbn,
-                autores,
-                editora,
-                edicao,
-                genero,
-                paginas,
-                sinopse
-        );
+        if (subtipo == 1) {
+            int paginas = ui.lerInteiro("Quantidade de páginas: ");
+            servico.cadastrarLivroFisico(id, autor, titulo, ano, isbn, idEditora, paginas);
+        } else {
+            int duracao = ui.lerInteiro("Duração em minutos: ");
+            servico.cadastrarAudioLivro(id, autor, titulo, ano, isbn, idEditora, duracao);
+        }
+    }
 
-        servico.cadastrarItem(livro);
+    private void cadastrarJogo() {
+        System.out.println("\n-- Cadastro de Jogo de Tabuleiro --");
+        int id = ui.lerInteiro("ID do Jogo: ");
+        String nome = ui.lerTexto("Nome do Jogo: ");
+        String tipo = ui.lerTexto("Tipo (Carta ou Tabuleiro): ");
+        int pecas = ui.lerInteiro("Quantidade de peças: ");
+        
+        // Uso de Double para o preço (necessário para UC11)
+        System.out.print("Preço de venda: ");
+        double preco = Double.parseDouble(ui.lerTexto("")); 
+        
+        servico.cadastrarJogo(id, nome, tipo, pecas, preco);
+    }
 
-        ui.mensagem("Livro cadastrado.");
+    private void excluirItem() {
+        int id = ui.lerInteiro("Digite o ID do item para remover: ");
+        boolean sucesso = servico.removerItem(id);
+        
+        if (sucesso) {
+            System.out.println("Item removido com sucesso do sistema.");
+        } else {
+            System.out.println("Erro: ID não encontrado ou item possui pendências.");
+        }
     }
 
     private void cadastrarRevista() {
-
+        System.out.println("\n-- Cadastro de Revista --");
         int id = ui.lerInteiro("ID: ");
         String titulo = ui.lerTexto("Título: ");
+        String autor = ui.lerTexto("Autor/Editor: ");
+        int ano = ui.lerInteiro("Ano: ");
         String issn = ui.lerTexto("ISSN: ");
         int volume = ui.lerInteiro("Volume: ");
         int numero = ui.lerInteiro("Número: ");
-        String editora = ui.lerTexto("Editora: ");
-        int ano = ui.lerInteiro("Ano: ");
-        String data = ui.lerTexto("Data publicação: ");
+        int paginas = ui.lerInteiro("Páginas: "); 
+        int idEditora = ui.lerInteiro("ID da Editora: ");
+        String data = ui.lerTexto("Data de Publicação: ");
 
-        Revista revista = new Revista(
-                id,
-                titulo,
-                ano,
-                issn,
-                volume,
-                numero,
-                editora,
-                data
-        );
-
-        servico.cadastrarItem(revista);
-
-        ui.mensagem("Revista cadastrada.");
+        servico.cadastrarRevista(id, autor, titulo, ano, issn, volume, numero, paginas, idEditora, data);
     }
 
     private void cadastrarCd() {
-
+        System.out.println("\n-- Cadastro de CD --");
         int id = ui.lerInteiro("ID: ");
         String titulo = ui.lerTexto("Título: ");
         String artista = ui.lerTexto("Artista: ");
         int ano = ui.lerInteiro("Ano: ");
-
-        List<String> faixas = new ArrayList<>();
-
-        int qtd = ui.lerInteiro("Quantidade faixas: ");
-
-        for (int i = 1; i <= qtd; i++) {
-
-            faixas.add(
-                    ui.lerTexto("Faixa " + i + ": ")
-            );
+        int numFaixas = ui.lerInteiro("Número de faixas: ");
+        List<String> faixas = new ArrayList<String>();
+        for (int i = 0; i < numFaixas; i++) {
+            faixas.add(ui.lerTexto("Faixa " + (i + 1) + ": "));
         }
-
-        Cd cd = new Cd(
-                id,
-                titulo,
-                ano,
-                artista,
-                faixas
-        );
-
-        servico.cadastrarItem(cd);
-
-        ui.mensagem("CD cadastrado.");
+        servico.cadastrarCd(id, artista, titulo, ano, faixas);
     }
 
     private void cadastrarDvd() {
-
-        int id = ui.lerInteiro("ID: ");
-        String titulo = ui.lerTexto("Título: ");
-        String diretor = ui.lerTexto("Diretor: ");
-        int ano = ui.lerInteiro("Ano: ");
-        int duracao = ui.lerInteiro("Duração: ");
-        String classificacao =
-                ui.lerTexto("Classificação: ");
-
-        Dvd dvd = new Dvd(
-                id,
-                titulo,
-                ano,
-                diretor,
-                duracao,
-                classificacao
-        );
-
-        servico.cadastrarItem(dvd);
-
-        ui.mensagem("DVD cadastrado.");
+        System.out.println("Funcionalidade opcional em implementação.");
     }
-    private void excluirItem() {
-            System.out.println("\n--- GERENCIAR EXCLUSÃO DE ITENS ---");
-        
-            List<ItemAcervo> itens = servico.getAcervo();
-            
-            if (itens.isEmpty()) {
-                System.out.println("O acervo está vazio. Não há itens para excluir.");
-                return;
-            }
-
-            System.out.println("Itens Atuais no Acervo:");
-            System.out.println("--------------------------------------------------");
-            for (ItemAcervo item : itens) {
-                System.out.printf("ID: %-4d | Título: %-20s | Status: %s%n", 
-                        item.getId(), item.getTitulo(), item.getStatus());
-            }
-            System.out.println("--------------------------------------------------");
-
-            System.out.print("Digite o ID do item que deseja EXCLUIR: ");
-            int id = ui.lerInteiro("ID: ");
-            String resultado = servico.removerItem(id);
-            System.out.println("\n" + resultado);
-    }
-       
 }

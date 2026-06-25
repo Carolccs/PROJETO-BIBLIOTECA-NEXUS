@@ -1,11 +1,8 @@
 package br.edu.ifpb.poo.aplicacao;
 
-import java.util.List;
-
-import br.edu.ifpb.poo.modelo.Emprestimo;
-import br.edu.ifpb.poo.modelo.ItemAcervo;
-import br.edu.ifpb.poo.modelo.Usuario;
+import br.edu.ifpb.poo.modelo.*;
 import br.edu.ifpb.poo.servico.BibliotecaServico;
+import java.util.List;
 
 public class MenuConsultas {
 
@@ -18,95 +15,87 @@ public class MenuConsultas {
     }
 
     public void exibir() {
-
         int opcao = -1;
 
         while (opcao != 4) {
-
-            ui.mostrarMensagem("\n--- MENU CONSULTAS ---");
-            ui.mostrarMensagem("[1] Consultar Itens");
-            ui.mostrarMensagem("[2] Consultar Usuários");
-            ui.mostrarMensagem("[3] Consultar Empréstimos");
-            ui.mostrarMensagem("[4] Voltar");
+            System.out.println("\n--- CONSULTAS E RELATÓRIOS ---");
+            System.out.println(" [1] Listar Itens do Acervo e Jogos (UC09)");
+            System.out.println(" [2] Histórico de Empréstimos (UC10)");
+            System.out.println(" [3] Relatório de Vendas de Jogos (UC11)");
+            System.out.println(" [4] Voltar");
 
             opcao = ui.lerInteiro("Escolha: ");
 
             switch (opcao) {
-
-                case 1:
-                    consultarItens();
-                    break;
-
-                case 2:
-                    consultarUsuarios();
-                    break;
-
-                case 3:
-                    consultarEmprestimos();
-                    break;
-
-                case 4:
-                    ui.mostrarMensagem("Voltando...");
-                    break;
-
-                default:
-                    ui.mostrarMensagem("Opção inválida.");
+                case 1: listarItens(); break;
+                case 2: consultarHistoricoEmprestimos(); break;
+                case 3: consultarVendasJogos(); break;
+                case 4: break;
+                default: System.out.println("Opção inválida.");
             }
         }
     }
 
-    private void consultarItens() {
+    private void listarItens() {
+        System.out.println("\n--- LISTAGEM GERAL DE ITENS ---");
 
-        String termo = ui.lerTexto("Digite o termo da busca: ");
-
-        List<ItemAcervo> resultados = servico.buscarItens(termo);
-
-        if (resultados.isEmpty()) {
-            ui.mostrarMensagem("Nenhum item encontrado.");
-            return;
+        List<ItemAcervo> acervo = servico.getAcervo();
+        if (acervo.isEmpty()) {
+            System.out.println("Nenhum item cadastrado no acervo.");
+        } else {
+            System.out.println(">> Acervo da Biblioteca:");
+            for (ItemAcervo item : acervo) {
+                String extra = "";
+                if (item instanceof Livro) {
+                    extra = " | Editora: " + ((Livro) item).getEditora();
+                }
+                System.out.println("ID: " + item.getId() + " | Título: " + item.getTitulo() + 
+                                   " | Autor: " + item.getAutor() + extra + " [" + item.getStatus() + "]");
+            }
         }
 
-        for (ItemAcervo item : resultados) {
-
-            ui.mostrarMensagem(
-                "ID: " + item.getId()
-                + " | Título: " + item.getTitulo()
-                + " | Status: " + item.getStatus()
-            );
-        }
-    }
-
-    private void consultarUsuarios() {
-
-        String termo = ui.lerTexto("Digite nome ou ID: ");
-
-        List<Usuario> resultados = servico.buscarUsuarios(termo);
-
-        if (resultados.isEmpty()) {
-            ui.mostrarMensagem("Nenhum usuário encontrado.");
-            return;
-        }
-
-        for (Usuario usuario : resultados) {
-
-            ui.mostrarMensagem(
-                "ID: " + usuario.getId()
-                + " | Nome: " + usuario.getNome()
-            );
+        List<JogoTabuleiro> jogos = servico.getJogos();
+        if (!jogos.isEmpty()) {
+            System.out.println("\n>> Jogos de Tabuleiro e Cartas:");
+            for (JogoTabuleiro jogo : jogos) {
+                System.out.println("ID: " + jogo.getId() + " | Nome: " + jogo.getNome() + 
+                                   " | Preço: R$ " + jogo.getPreco() + " [" + jogo.getStatus() + "]");
+            }
         }
     }
 
-    private void consultarEmprestimos() {
+    private void consultarHistoricoEmprestimos() {
+        System.out.println("\n--- HISTÓRICO DE EMPRÉSTIMOS ---");
+        
+        List<Emprestimo> historico = servico.getHistoricoEmprestimos();
 
-        List<Emprestimo> lista = servico.filtrarEmprestimos("TODOS", "");
-
-        if (lista.isEmpty()) {
-            ui.mostrarMensagem("Nenhum empréstimo encontrado.");
-            return;
+        if (historico.isEmpty()) {
+            System.out.println("Não há registros de empréstimos.");
+        } else {
+            for (Emprestimo e : historico) {
+                String multaStr = e.getValorMulta() > 0 ? String.format("R$ %.2f", e.getValorMulta()) : "zero reais";
+                String dataDev = (e.getDataDevolucaoReal() != null) ? e.getDataDevolucaoReal().toString() : "EM ABERTO";
+                
+                System.out.println("Empréstimo ID: " + e.getId() + 
+                                " | Usuário: " + e.getUsuario().getNome() + 
+                                " | Devolução: " + dataDev + 
+                                " | Multa: " + multaStr);
+            }
         }
+    }
 
-        for (Emprestimo e : lista) {
-            ui.mostrarMensagem(e.toString());
+    private void consultarVendasJogos() {
+        System.out.println("\n--- VENDAS DE JOGOS REALIZADAS ---");
+        List<Venda> vendas = servico.listarVendas();
+
+        if (vendas.isEmpty()) {
+            System.out.println("Nenhuma venda de jogo registrada até o momento.");
+        } else {
+            for (Venda v : vendas) {
+                System.out.println("ID Jogo: " + v.getJogo().getId() + 
+                                   " | Título: " + v.getJogo().getNome() + 
+                                   " | Valor da Venda: R$ " + v.getValorVenda());
+            }
         }
     }
 }
